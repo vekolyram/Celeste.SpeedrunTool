@@ -1,0 +1,93 @@
+
+using Celeste.Mod.SpeedrunTool.Utils;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace Celeste.Mod.SpeedrunTool.SaveLoad.ThirdPartySupport;
+internal static class ExtendedVariantsUtils {
+
+    [Initialize]
+    private static void VersionCheck() {
+        if (ModUtils.GetModule("ExtendedVariantMode") is not EverestModule extVarModule) {
+            return;
+        }
+        if (extVarModule.Metadata.Version < new Version(0, 47, 0)) {
+            throw new Exception("Please Update ExtendedVariantMode!");
+        }
+    }
+
+    internal static void Support() {
+        // 静态字段在 InitExtendedVariantsFields() 中处理了
+        if (ModUtils.GetType("ExtendedVariantMode", "ExtendedVariants.Module.ExtendedVariantsModule") is not { } moduleType) {
+            return;
+        }
+
+        // 修复玩家死亡后不会重置设置
+        SaveLoadAction.InternalSafeAdd(
+            saveState: (savedValues, _) => {
+                if (ModUtils.GetModule("ExtendedVariantMode") is { } module &&
+                    module.GetFieldValue("TriggerManager") is { } triggerManager) {
+                    savedValues[moduleType] = new Dictionary<string, object> { { "TriggerManager", triggerManager.DeepCloneShared() } };
+                }
+            },
+            loadState: (savedValues, _) => {
+                if (savedValues.TryGetValue(moduleType, out Dictionary<string, object> dictionary) &&
+                    dictionary.TryGetValue("TriggerManager", out object savedTriggerManager) &&
+                    ModUtils.GetModule("ExtendedVariantMode") is { } module) {
+                    if (module.GetFieldValue("TriggerManager") is { } triggerManager) {
+                        savedTriggerManager.DeepCloneToShared(triggerManager);
+                    }
+                }
+            }
+        );
+
+        if (ModUtils.GetType("ExtendedVariantMode", "ExtendedVariants.Module.ExtendedVariantsSettings") is not { } settingsType) {
+            return;
+        }
+
+        if (ModUtils.GetType("ExtendedVariantMode", "ExtendedVariants.VariantRandomizer")?.GetMethod("RefreshEnabledVariantsDisplayList") is not { } refreshDisplayListMethod) {
+            return;
+        }
+
+        List<PropertyInfo> settingProperties = [.. settingsType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(property => property.CanRead
+                               && property.CanWrite
+                               && property.GetCustomAttribute<SettingIgnoreAttribute>() != null
+                               && !property.Name.StartsWith("Display")
+            )];
+
+        SaveLoadAction.InternalSafeAdd(
+            saveState: (savedValues, _) => {
+                if (moduleType.GetPropertyValue("Settings") is not { } settingsInstance) {
+                    return;
+                }
+
+                Dictionary<string, object> dict = [];
+                foreach (PropertyInfo property in settingProperties) {
+                    dict[property.Name] = property.GetValue(settingsInstance);
+                }
+
+                savedValues[settingsType] = dict.DeepCloneShared();
+            },
+            loadState: (savedValues, _) => {
+                // 本来打算将关卡中 ExtendedVariantsTrigger 涉及相关的值强制 SL，想想还是算了
+                if (!ModSettings.SaveExtendedVariants && !StateManager.Instance.SavedByTas) {
+                    return;
+                }
+
+                if (moduleType.GetPropertyValue("Settings") is not { } settingsInstance) {
+                    return;
+                }
+
+                if (savedValues.TryGetValue(settingsType, out Dictionary<string, object> dict)) {
+                    dict = dict.DeepCloneShared();
+                    foreach (string propertyName in dict.Keys) {
+                        settingsInstance.SetPropertyValue(propertyName, dict[propertyName]);
+                    }
+                }
+
+                refreshDisplayListMethod.Invoke(null, []);
+            });
+    }
+}

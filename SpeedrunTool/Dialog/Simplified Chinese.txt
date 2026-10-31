@@ -1,0 +1,195 @@
+# ================================== Common ==================================
+SPEEDRUN_TOOL_ON= 开
+SPEEDRUN_TOOL_OFF= 关
+SPEEDRUN_TOOL_ALL= 全部
+SPEEDRUN_TOOL_ALWAYS=总是
+SPEEDRUN_TOOL_NEVER=从不
+
+# ================================== Mod Options Menu ==================================
+SPEEDRUN_TOOL=                  速通辅助工具
+SPEEDRUN_TOOL_ENABLED=          开关
+SPEEDRUN_TOOL_ROOM_TIMER=       房间计时器
+SPEEDRUN_TOOL_STATE=            保存状态
+SPEEDRUN_TOOL_DEATH_STATISTICS= 死亡数据
+SPEEDRUN_TOOL_MORE_OPTIONS=     更多选项
+
+# ================================== Room Timer Options ==================================
+SPEEDRUN_TOOL_NEXT_ROOM=                   下个房间
+SPEEDRUN_TOOL_CURRENT_ROOM=                当前房间
+SPEEDRUN_TOOL_NUMBER_OF_ROOMS=             计时房间数
+SPEEDRUN_TOOL_END_POINT_STYLE=             终点样式
+SPEEDRUN_TOOL_TIME_SUMMIT_FLAG=            山顶旗子纳入计时
+SPEEDRUN_TOOL_TIME_HEART_CASSETTE=         心和磁带纳入计时
+SPEEDRUN_TOOL_AUTO_TURN_OFF_ROOM_TIMER=    重启章节/游戏时关闭房间计时器
+SPEEDRUN_TOOL_ROOM_ID_END_POINT=           房间终点: {0}
+SPEEDRUN_TOOL_RESET_ROOM_TIMER_PB_TOOLTIP= 清除房间计时记录与终点
+SPEEDRUN_TOOL_RESET_ROOM_TIMER_PB_DIALOG=
+    [MADELINE left normal]
+    清除房间计时记录与终点~
+SPEEDRUN_TOOL_DISPLAY_ROOM_GOLD=           破纪录时以金色显示
+
+# ================================== State ==================================
+SPEEDRUN_TOOL_FREEZE_AFTER_LOAD_STATE=     加载状态后冻结游戏
+SPEEDRUN_TOOL_IGNORE_HOLDING_KEYS=         忽略按住的键
+SPEEDRUN_TOOL_AUTO_LOAD_STATE_AFTER_DEATH= 死亡后自动加载状态
+SPEEDRUN_TOOL_AUTO_CLEAR_STATE_ON_SCREEN_TRANSITION= 切屏时自动清除状态
+SPEEDRUN_TOOL_AUTO_CLEAR_STATE_ON_SCENE_SWITCH= 章节切换时自动清除状态
+SPEEDRUN_TOOL_GC_AFTER_LOAD_STATE=         加载存档后回收内存
+SPEEDRUN_TOOL_GC_MEMORY_THRESHOLD=         内存回收阈值
+SPEEDRUN_TOOL_GC_THRESHOLD_DESCRIPTION=    仅在加载存档时会检测内存使用是否超过阈值
+SPEEDRUN_TOOL_GC_LOAD_DESCRIPTION=         会加重加载存档时的卡顿, 但能缓解之后游玩过程中的卡顿
+SPEEDRUN_TOOL_GC_CLEAR_DESCRIPTION=        会加重清除存档时的卡顿, 但能缓解之后游玩过程中的卡顿
+SPEEDRUN_TOOL_GC_AFTER_CLEAR_STATE=        清除存档后回收内存
+SPEEDRUN_TOOL_SAVE_TIME_AND_DEATHS=        保存时间和死亡数
+SPEEDRUN_TOOL_SAVE_TIME_AND_DEATHS_DESCRIPTION=开启后, 时间和死亡数也会被保存/加载
+SPEEDRUN_TOOL_SAVE_EXTENDED_VARIANTS=      保存拓展异变
+SPEEDRUN_TOOL_SAVE_IN_LUA_CUTSCENE=        允许在 Lua 剧情中存档
+SPEEDRUN_TOOL_SAVE_IN_LUA_WARN=            警告: 在 Lua 剧情中存档往往会带来问题.
+SPEEDRUN_TOOL_ALLOW_STATE_DURING_DEATH=    允许死亡时保存状态
+SPEEDRUN_TOOL_CLEAR_STATE_ON_HOT_RELOAD=   热重载后自动清除状态
+SPEEDRUN_TOOL_CLEAR_STATE_ON_HOT_RELOAD_TIP=建议开启.
+SPEEDRUN_TOOL_SAVE_STATE=                  保存状态
+SPEEDRUN_TOOL_LOAD_STATE=                  加载状态
+SPEEDRUN_TOOL_CLEAR_STATE=                 清除状态
+SPEEDRUN_TOOL_CLEAR_ALL=                   清除所有状态
+SPEEDRUN_TOOL_CLEAR_STATE_TOOLTIP=         清除状态
+SPEEDRUN_TOOL_CLEAR_ALL_TOOLTIP=           清除所有状态
+SPEEDRUN_TOOL_NOT_SAVED_STATE_TOOLTIP=     请先保存状态
+SPEEDRUN_TOOL_NO_MESSAGE_AFTER_SAVE_LOAD=  存读档后不弹出信息
+SPEEDRUN_TOOL_NO_MESSAGE_AFTER_SAVE_LOAD_DESCRIPTION=只对 "保存状态", "加载状态" 的快捷键生效
+
+SPEEDRUN_TOOL_CLEAR_STATE_DIALOG=
+    [MADELINE left normal]
+    清除状态~
+SPEEDRUN_TOOL_CLEAR_ALL_DIALOG=
+    [MADELINE left normal]
+    清除所有状态~
+SPEEDRUN_TOOL_NOT_SAVED_STATE_YET_DIALOG=
+    [MADELINE left upset]
+    请先保存状态。
+SPEEDRUN_TOOL_CLEAR_STATE_DIALOG_BADELINE=
+    [BADELINE left normal]
+    清除状态~
+SPEEDRUN_TOOL_NOT_SAVED_STATE_YET_DIALOG_BADELINE=
+    [BADELINE left yell]
+    还没保存状态！
+
+# ================================== End Point Style ==================================
+SPEEDRUN_TOOL_FLAG=      Flag
+SPEEDRUN_TOOL_GOLD_BERRY=Gold Berry
+SPEEDRUN_TOOL_MADELINE=  Madeline
+SPEEDRUN_TOOL_BADELINE=  Badeline
+SPEEDRUN_TOOL_GRANNY=    Granny
+SPEEDRUN_TOOL_THEO=      Theo
+SPEEDRUN_TOOL_OSHIRO=    Oshiro
+SPEEDRUN_TOOL_BIRD=      Bird
+SPEEDRUN_TOOL_EYE_BAT=   Eye Bat
+SPEEDRUN_TOOL_OGMO=      Ogmo
+SPEEDRUN_TOOL_SKYTORN=   Skytorn
+SPEEDRUN_TOOL_TOWERFALL= TowerFall
+SPEEDRUN_TOOL_YURI=      Yuri
+SPEEDRUN_TOOL_RANDOM=    随机
+
+# ================================== Hotkey Config ==================================
+SPEEDRUN_TOOL_KEYBOARD=                      键盘
+SPEEDRUN_TOOL_CONTROLLER=                    手柄
+SPEEDRUN_TOOL_COMBO_HOTKEY_DESCRIPTION=      绑定多个按键表示组合键，需要同时按下才能触发相应操作
+SPEEDRUN_TOOL_PRESS_DELETE_TO_CLEAR_HOTKEYS= 按下删除或者日志键清空快捷键
+SPEEDRUN_TOOL_TOGGLE_HOTKEYS=                开关快捷键
+SPEEDRUN_TOOL_OPEN_DEBUG_MAP=                打开地图
+SPEEDRUN_TOOL_RESET_ROOM_TIMER_PB=           清除房间计时记录与终点
+SPEEDRUN_TOOL_SWITCH_ROOM_TIMER=             切换房间计时器
+SPEEDRUN_TOOL_INCREASE_TIMED_ROOMS=          计时房间数加一
+SPEEDRUN_TOOL_DECREASE_TIMED_ROOMS=          计时房间数减一
+SPEEDRUN_TOOL_SET_END_POINT=                 标记房间计时器终点
+SPEEDRUN_TOOL_SET_ADDITIONAL_END_POINT=      标记多个房间计时器终点
+SPEEDRUN_TOOL_TELEPORT_TO_PREVIOUS_ROOM=     传送到上个房间
+SPEEDRUN_TOOL_TELEPORT_TO_NEXT_ROOM=         传送到下个房间
+SPEEDRUN_TOOL_ALREADY_FIRST_ROOM_TOOLTIP=    已经在第一个房间了
+SPEEDRUN_TOOL_ALREADY_FIRST_ROOM_DIALOG=
+    [MADELINE left upset]
+    已经在第一个房间了。
+SPEEDRUN_TOOL_ALREADY_FIRST_ROOM_DIALOG_BADELINE=
+    [BADELINE left yell]
+    已经在第一个房间了！
+SPEEDRUN_TOOL_ALREADY_LAST_ROOM_TOOLTIP=     已经在最后一个房间了
+SPEEDRUN_TOOL_ALREADY_LAST_ROOM_DIALOG=
+    [MADELINE left upset]
+    已经在最后一个房间了。
+SPEEDRUN_TOOL_ALREADY_LAST_ROOM_DIALOG_BADELINE=
+    [BADELINE left yell]
+    已经在最后一个房间了！
+SPEEDRUN_TOOL_SWITCH_AUTO_LOAD_STATE=        开关死亡自动加载状态
+SPEEDRUN_TOOL_SPAWN_TOWER_VIEWER=            一键望远镜/开关镜头锁
+SPEEDRUN_TOOL_TOGGLE_FULLSCREEN=             开关全屏
+SPEEDRUN_TOOL_EXPORT_ROOM_TIMES=             导出房间计时数据
+SPEEDRUN_TOOL_EXPORT_ROOM_TIMES_SUCCESS=     成功导出计时数据到{0}
+SPEEDRUN_TOOL_EXPORT_ROOM_TIMES_FAIL=        必须在关卡中才能导出数据
+SPEEDRUN_TOOL_SAVESLOT1=                     存档 1
+SPEEDRUN_TOOL_SAVESLOT2=                     存档 2
+SPEEDRUN_TOOL_SAVESLOT3=                     存档 3
+SPEEDRUN_TOOL_SAVESLOT4=                     存档 4
+SPEEDRUN_TOOL_SAVESLOT5=                     存档 5
+SPEEDRUN_TOOL_SAVESLOT6=                     存档 6
+SPEEDRUN_TOOL_SAVESLOT7=                     存档 7
+SPEEDRUN_TOOL_SAVESLOT8=                     存档 8
+SPEEDRUN_TOOL_SAVESLOT9=                     存档 9
+SPEEDRUN_TOOL_SAVE_TO_NEXT_SLOT=             存至下一存档槽
+SPEEDRUN_TOOL_LOAD_FROM_LAST_SLOT=           读取上一存档槽
+SPEEDRUN_TOOL_SWITCH_TO_NEXT_SLOT=           切换至下一存档槽
+SPEEDRUN_TOOL_SWITCH_TO_PREVIOUS_SLOT=       切换至上一存档槽
+SPEEDRUN_TOOL_TOGGLE_SAVE_LOAD_UI=           开关存读档用户界面
+
+# ================================== Death Statistics ==================================
+SPEEDRUN_TOOL_MAX_NUMBER_OF_DEATH_DATA=      死亡数据数量
+SPEEDRUN_TOOL_CHECK_DEATH_STATISTICS=        查看死亡数据
+SPEEDRUN_TOOL_DEATH_STATISTICS_HEADER=       死亡数据（存档 {0})
+SPEEDRUN_TOOL_DEATH_STATISTICS_HEADER_DEBUG= 死亡数据（调试存档)
+SPEEDRUN_TOOL_CLEAR_DEATH_STATISTICS=        清除数据
+SPEEDRUN_TOOL_CHAPTER=                       章节
+SPEEDRUN_TOOL_ROOM=                          房间
+SPEEDRUN_TOOL_LOST_TIME=                     损失时间
+SPEEDRUN_TOOL_CAUSE_OF_DEATH=                死因
+SPEEDRUN_TOOL_TOTAL_DEATH_COUNT=             总死亡数
+SPEEDRUN_TOOL_TOTAL_LOST_TIME=               总损失时间
+SPEEDRUN_TOOL_NO_DATA=                       无数据
+
+# ================================== More Options ==================================
+SPEEDRUN_TOOL_TELEPORT_ROOM_CATEGORY=              房间传送类别
+SPEEDRUN_TOOL_DEFAULT=                             默认
+SPEEDRUN_TOOL_ANY=                                 Any%
+SPEEDRUN_TOOL_RESPAWN_SPEED=                       复活速度
+SPEEDRUN_TOOL_RESTART_CHAPTER_SPEED=               重启章节速度
+SPEEDRUN_TOOL_SKIP_RESTART_CHAPTER_SCREEN_WIPE=    跳过重启章节的黑屏动画
+SPEEDRUN_TOOL_ALLOW_PAUSE_DURING_DEATH=            允许死亡时暂停
+SPEEDRUN_TOOL_MUTE_IN_BACKGROUND=                  游戏后台运行时静音
+SPEEDRUN_TOOL_FIX_CORE_REFILL_DASH_AFTER_TELEPORT= 修正第八章传送后冲刺恢复异常
+SPEEDRUN_TOOL_POPUP_MESSAGE_STYLE=                 提示信息样式
+SPEEDRUN_TOOL_TOOLTIP=                             简洁
+SPEEDRUN_TOOL_DIALOG_BOX=                          对话框
+SPEEDRUN_TOOL_OPTION_STATE=                        {0}：{1}
+SPEEDRUN_TOOL_ENABLE_TIMER_ON_AREA_COMPLETE=       完成关卡时打开计时器
+SPEEDRUN_TOOL_FILE=                                文件
+SPEEDRUN_TOOL_ROOM_TIMER_EXPORT_TYPE=              计时数据导出类型
+SPEEDRUN_TOOL_CLIPBOARD=                           剪贴板
+SPEEDRUN_TOOL_HOTKEYS=                             快捷键
+SPEEDRUN_TOOL_HOTKEYS_CONFIG=                      快捷键设置
+SPEEDRUN_TOOL_UNLOCK_CAMERA=                       解锁镜头
+SPEEDRUN_TOOL_EMOTE_MOD_PULP=                      允许 PULP 技巧 (EmoteMod)
+# ================================== 性能 ==================================
+SPEEDRUN_TOOL_PERFORMANCE=                  性能
+SPEEDRUN_TOOL_PROFILE_SAVE_LOAD=            记录存档/读档耗时
+SPEEDRUN_TOOL_PROFILE_SAVE_LOAD_TIP=        每次存档/读档往 log.txt 写一行分段耗时、分配量和克隆类型统计
+SPEEDRUN_TOOL_GC_BACKGROUND_COLLECT=        后台 GC
+SPEEDRUN_TOOL_GC_BACKGROUND_COLLECT_TIP=    内存未超阈值时在后台线程回收垃圾，而不是让游戏卡住 0.4~0.9 秒
+SPEEDRUN_TOOL_GC_COMPACT_LOH=               压缩大对象堆
+SPEEDRUN_TOOL_GC_COMPACT_LOH_TIP=           更慢但能减少碎片。默认关闭，因为压缩是 GC 长停顿的主要原因
+SPEEDRUN_TOOL_PRE_CLONE_ENTITIES=           存档后预克隆
+SPEEDRUN_TOOL_PRE_CLONE_ENTITIES_TIP=       存档后在后台把房间再克隆一份以加快读档，代价是内存和 GC 压力
+SPEEDRUN_TOOL_SHARE_M_TEXTURE=              共享 MTexture
+SPEEDRUN_TOOL_SHARE_M_TEXTURE_TIP=          复用 MTexture 实例而不是克隆它们（它们本身不可变）
+SPEEDRUN_TOOL_SHARE_MAP_DATA=               共享地图数据
+SPEEDRUN_TOOL_SHARE_MAP_DATA_TIP=           复用房间定义数据而不是克隆它。收益最大，但运行时修改地图数据的 Mod 不会被回滚
+SPEEDRUN_TOOL_MAP_DATA_ENTRIES=             条目
+SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES=         跳过装饰实体（实验）
+SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     把纯装饰实体排除在快照之外。在装饰密集的大厅实测无效，因为它们大多带碰撞盒
