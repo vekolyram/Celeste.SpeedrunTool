@@ -192,4 +192,4 @@ SPEEDRUN_TOOL_SHARE_MAP_DATA=               共享地图数据
 SPEEDRUN_TOOL_SHARE_MAP_DATA_TIP=           复用房间定义数据而不是克隆它。收益最大，但运行时修改地图数据的 Mod 不会被回滚
 SPEEDRUN_TOOL_MAP_DATA_ENTRIES=             条目
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES=         跳过装饰实体（实验）
-SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     把纯装饰实体排除在快照之外。在装饰密集的大厅实测无效，因为它们大多带碰撞盒
+SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     把纯装饰实体排除在快照之外。带光源的实体一律不摘。在装饰密集的大厅实测无效

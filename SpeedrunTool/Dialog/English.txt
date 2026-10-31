@@ -191,4 +191,4 @@ SPEEDRUN_TOOL_SHARE_MAP_DATA=               Share Map Data
 SPEEDRUN_TOOL_SHARE_MAP_DATA_TIP=           Reuses room definition data instead of cloning it. Biggest win, but mods that edit map data at runtime will not be rolled back
 SPEEDRUN_TOOL_MAP_DATA_ENTRIES=             Entries
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES=         Skip Deco Entities (Experimental)
-SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     Leaves pure decoration entities out of the snapshot. Measured ineffective in deco-heavy lobbies, since most of them have colliders
+SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     Leaves pure decoration entities out of the snapshot. Entities with lights are never skipped. Measured ineffective in deco-heavy lobbies

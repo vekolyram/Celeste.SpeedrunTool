@@ -8,16 +8,23 @@ namespace Celeste.Mod.SpeedrunTool.SaveLoad.Utils;
 /// <para>做法是复用现成的 <see cref="IgnoreSaveLoadComponent"/> 机制 —— 存档前把它们从 Level 摘下,
 /// 读档后原样放回, 因此它们**不会消失**, 只是状态停在"摘下那一刻"。</para>
 /// <para>判定刻意保守, 只认完全没有逻辑的实体: 无碰撞盒 / 类型自身没有重写
-/// Update·Added·Removed·Awake / 组件全是图形类 / 不带 Global·Persistent 标签。</para>
+/// Update·Added·Removed·Awake / 组件只有 <see cref="GraphicsComponent"/> / 不带 Global·Persistent 标签。</para>
+/// <para><b>带光源 (VertexLight / BloomPoint / LightOcclude) 的实体一律不摘</b> ——
+/// 它们依赖 Added/Removed 注册进 Level.Lighting, 而摘除/放回走的是 BasedRemoved/BasedAdded,
+/// 不会触发这些注册, 结果是读档后动态光源和背景光全部消失。</para>
 /// <para>打开方式: <c>ModSettings.IgnoreDecoEntities = true</c> 或控制台 <c>srt_deco on</c>。
 /// 打开后日志会打 <c>deco: marked=N/M</c>, 用来看这个房间到底有多少装饰能被摘掉。</para>
 /// </summary>
 internal static class DecoIgnoreUtils {
     private const BindingFlags Declared = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-    // 纯视觉组件: 除了 GraphicsComponent 之外, 这几个也只影响渲染/光照
+    // 只允许"纯渲染"组件。注意 **不能** 把 VertexLight / BloomPoint / LightOcclude 放进来:
+    // 它们靠 Added/Removed 把自己注册进 Level.Lighting, 而 IgnoreSaveLoadComponent 的
+    // BasedAdded/BasedRemoved 只设置 entity.Scene、不会调用 component.Added/Removed,
+    // 所以带光源的实体被摘掉再放回来之后, 光源就再也不会出现在 Lighting.lights 里
+    // —— 表现为读档后动态光源/背景光全部消失。
     private static readonly HashSet<Type> VisualOnlyComponents = [
-        typeof(VertexLight), typeof(BloomPoint), typeof(LightOcclude), typeof(IgnoreSaveLoadComponent)
+        typeof(IgnoreSaveLoadComponent)
     ];
 
     private static readonly Dictionary<Type, bool> TypeCache = [];
