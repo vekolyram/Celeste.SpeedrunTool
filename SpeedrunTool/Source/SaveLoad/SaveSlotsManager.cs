@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using EventInstance = FMOD.Studio.EventInstance;
 
 namespace Celeste.Mod.SpeedrunTool.SaveLoad;
@@ -71,13 +71,69 @@ internal static class SaveSlotsManager {
         }
         return false;
     }
+    #region 排队存档 / 轮换存档
+
+    // 忙碌（读档后的 wipe、冻结）时按下的存档请求，等空闲后自动补一次
+    internal static bool PendingSave;
+
+    // 轮换存档：每次存档自动切到环里的下一个槽，旧快照自然留在上一个槽里，
+    // 配合已有的预览 UI（NumPad9，左右翻页、回车读档）就等于一个"存档历史"。
+    private static int rotateIndex = 1;
+
+    private static bool IsIdle() {
+        foreach (SaveSlot slot in SaveSlots) {
+            if (slot.StateManager.State != State.None) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void AdvanceRotateSlot() {
+        if (!ModSettings.RotateSaveSlots) {
+            return;
+        }
+
+        int count = Math.Clamp(ModSettings.RotateSlotCount, 2, 4);
+        rotateIndex = rotateIndex % count + 1;
+        SwitchSlot(rotateIndex);
+    }
+
+    internal static void TryFlushPendingSave() {
+        if (!PendingSave || Engine.Scene is not Level || !IsIdle()) {
+            return;
+        }
+
+        PendingSave = false;
+        if (SaveState(out string popup)) {
+            Message.PopupMessageUtils.Show(popup, null);
+        }
+    }
+
+    private static void LevelOnUpdate(On.Celeste.Level.orig_Update orig, Level self) {
+        orig(self);
+        TryFlushPendingSave();
+    }
+
+    #endregion
     public static bool SaveState(out string popup) {
         bool b;
         if (CannotSaveLoad()) {
+            // 读档后的 wipe / 冻结窗口里按存档不再直接报 Busy：
+            // 排队等空闲后自动补一次（高速图里"读完立刻存"很常见）
+            if (ModSettings.QueueSaveWhenBusy && Engine.Scene is Level) {
+                PendingSave = true;
+                popup = "Save queued: will save as soon as SpeedrunTool is free.";
+                Logger.Info("SpeedrunTool/SaveState", popup);
+                return true;
+            }
+
             b = false;
             popup = "Failed to Save: SpeedrunTool is Busy!";
         }
         else {
+            AdvanceRotateSlot();
             b = StateManagerInstance.SaveStateImpl(false, out string message);
             popup = message;
             if (b) {
@@ -138,6 +194,7 @@ internal static class SaveSlotsManager {
 
     private static void HandleSwitchScene(On.Monocle.Scene.orig_Begin orig, Scene self) {
         orig(self);
+        PendingSave = false; // 换房间后不能再补存到别的房间
         SaveSlot current = Slot;
         WaitUntilThreadSafe();
         foreach (SaveSlot slot in SaveSlots) {
@@ -192,11 +249,13 @@ internal static class SaveSlotsManager {
     [Load]
     private static void Load() {
         On.Monocle.Scene.Begin += HandleSwitchScene;
+        On.Celeste.Level.Update += LevelOnUpdate;
     }
 
     [Unload]
     private static void Unload() {
         On.Monocle.Scene.Begin -= HandleSwitchScene;
+        On.Celeste.Level.Update -= LevelOnUpdate;
     }
 
     #region Tas

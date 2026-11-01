@@ -192,3 +192,11 @@ SPEEDRUN_TOOL_SHARE_MAP_DATA_TIP=           Reuses room definition data instead 
 SPEEDRUN_TOOL_MAP_DATA_ENTRIES=             Entries
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES=         Skip Deco Entities (Experimental)
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     Leaves pure decoration entities out of the snapshot. Entities with lights are never skipped. Measured ineffective in deco-heavy lobbies
+# ================================== Save behaviour ==================================
+SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY=          Queue Save when Busy
+SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY_TIP=      Pressing Save during the load screen wipe is queued and runs as soon as SpeedrunTool is free, instead of failing with Busy
+SPEEDRUN_TOOL_SAVE_WHILE_WAITING=            Save while Paused after Load
+SPEEDRUN_TOOL_SAVE_WHILE_WAITING_TIP=        Also allow saving while the game is still frozen after a load (State.Waiting)
+SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS=             Rotating Save Slots (Save history)
+SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS_TIP=         Each save moves to the next slot, so the previous state stays in the slot before it. Browse them with the save slot UI to recover an overwritten save
+SPEEDRUN_TOOL_ROTATE_SLOT_COUNT=             Rotating Slot Count

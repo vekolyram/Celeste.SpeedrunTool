@@ -166,7 +166,14 @@ public static class DialogIds {
     public const string HotkeysConfig = "SPEEDRUN_TOOL_HOTKEYS_CONFIG";
     public const string UnlockCamera = "SPEEDRUN_TOOL_UNLOCK_CAMERA";
     public const string EmoteModPULP = "SPEEDRUN_TOOL_EMOTE_MOD_PULP";
-    // Performance
+    // Save behaviour
+    public const string QueueSaveWhenBusy = "SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY";
+    public const string QueueSaveWhenBusyTip = "SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY_TIP";
+    public const string SaveWhileWaiting = "SPEEDRUN_TOOL_SAVE_WHILE_WAITING";
+    public const string SaveWhileWaitingTip = "SPEEDRUN_TOOL_SAVE_WHILE_WAITING_TIP";
+    public const string RotateSaveSlots = "SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS";
+    public const string RotateSaveSlotsTip = "SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS_TIP";
+    public const string RotateSlotCount = "SPEEDRUN_TOOL_ROTATE_SLOT_COUNT";    // Performance
     public const string Performance = "SPEEDRUN_TOOL_PERFORMANCE";
     public const string ProfileSaveLoad = "SPEEDRUN_TOOL_PROFILE_SAVE_LOAD";
     public const string ProfileSaveLoadTip = "SPEEDRUN_TOOL_PROFILE_SAVE_LOAD_TIP";

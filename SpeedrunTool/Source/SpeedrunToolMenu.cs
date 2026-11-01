@@ -172,6 +172,25 @@ public static class SpeedrunToolMenu {
                 ModSettings.SaveInLuaCutscene = b));
             AddDescription(saveInLua, subMenu, menu, Dialog.Clean(DialogIds.SaveInLuaWarn));
 
+            TextMenu.Item queueSave;
+            subMenu.Add(queueSave = new TextMenu.OnOff(Dialog.Clean(DialogIds.QueueSaveWhenBusy), ModSettings.QueueSaveWhenBusy).Change(b =>
+                ModSettings.QueueSaveWhenBusy = b));
+            AddDescription(queueSave, subMenu, menu, Dialog.Clean(DialogIds.QueueSaveWhenBusyTip));
+
+            TextMenu.Item saveWhileWaiting;
+            subMenu.Add(saveWhileWaiting = new TextMenu.OnOff(Dialog.Clean(DialogIds.SaveWhileWaiting), ModSettings.SaveWhileWaiting).Change(b => {
+                ModSettings.SaveWhileWaiting = b;
+                StateManager.AllowSaveLoadWhenWaiting = b;
+            }));
+            AddDescription(saveWhileWaiting, subMenu, menu, Dialog.Clean(DialogIds.SaveWhileWaitingTip));
+
+            TextMenu.Item rotateSlots;
+            subMenu.Add(rotateSlots = new TextMenu.OnOff(Dialog.Clean(DialogIds.RotateSaveSlots), ModSettings.RotateSaveSlots).Change(b =>
+                ModSettings.RotateSaveSlots = b));
+            AddDescription(rotateSlots, subMenu, menu, Dialog.Clean(DialogIds.RotateSaveSlotsTip));
+
+            subMenu.Add(new TextMenuExt.IntSlider(Dialog.Clean(DialogIds.RotateSlotCount), 2, 4, ModSettings.RotateSlotCount).Change(i =>
+                ModSettings.RotateSlotCount = i));
             subMenu.Add(new TextMenu.OnOff(Dialog.Clean(DialogIds.AllowStateDuringDeath), ModSettings.AllowStateDuringDeath).Change(b =>
                 ModSettings.AllowStateDuringDeath = b));
 

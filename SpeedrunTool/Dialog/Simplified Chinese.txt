@@ -193,3 +193,11 @@ SPEEDRUN_TOOL_SHARE_MAP_DATA_TIP=           复用房间定义数据而不是克
 SPEEDRUN_TOOL_MAP_DATA_ENTRIES=             条目
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES=         跳过装饰实体（实验）
 SPEEDRUN_TOOL_IGNORE_DECO_ENTITIES_TIP=     把纯装饰实体排除在快照之外。带光源的实体一律不摘。在装饰密集的大厅实测无效
+# ================================== 存档行为 ==================================
+SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY=          忙碌时排队存档
+SPEEDRUN_TOOL_QUEUE_SAVE_WHEN_BUSY_TIP=      在读档的黑屏/冻结期间按存档不再报 Busy，而是排队，等空闲后自动补一次
+SPEEDRUN_TOOL_SAVE_WHILE_WAITING=            读档后冻结时也能存档
+SPEEDRUN_TOOL_SAVE_WHILE_WAITING_TIP=        允许在"读档后画面冻结等按键"的状态下直接存档
+SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS=             轮换存档槽（存档历史）
+SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS_TIP=         每次存档自动切到下一个槽，旧快照留在上一个槽里；用存档槽预览界面左右翻看即可找回被覆盖的存档
+SPEEDRUN_TOOL_ROTATE_SLOT_COUNT=             轮换槽数量

@@ -1,4 +1,4 @@
-﻿using Celeste.Mod.SpeedrunTool.Message;
+using Celeste.Mod.SpeedrunTool.Message;
 using Celeste.Mod.SpeedrunTool.Other;
 using Celeste.Mod.SpeedrunTool.RoomTimer;
 using Celeste.Mod.SpeedrunTool.SaveLoad;
@@ -18,6 +18,7 @@ public class SpeedrunToolSettings : EverestModuleSettings {
 
     public void OnLoadSettings() {
         SetGcMemoryThreshold(Doubled_GcMemoryThreshold);
+        StateManager.AllowSaveLoadWhenWaiting = SaveWhileWaiting;
 
         LogForDiagnostics();
     }
@@ -38,6 +39,7 @@ public class SpeedrunToolSettings : EverestModuleSettings {
         sb.Append($"\n - {nameof(ShareLevelData)}: {ShareLevelData}");
         sb.Append($"\n - {nameof(ShareLevelDataAll)}: {ShareLevelDataAll}");
         sb.Append($"\n - ProfileSaveLoad: {SaveLoadProfiler.Enabled}");
+        sb.Append($"\n - {nameof(QueueSaveWhenBusy)}: {QueueSaveWhenBusy}, {nameof(SaveWhileWaiting)}: {SaveWhileWaiting}, {nameof(RotateSaveSlots)}: {RotateSaveSlots}({RotateSlotCount})");
         Logger.Info("SpeedrunTool", sb.ToString());
         // log it in LogLevel.Info, so we know more to diagnose when user gives us a log.txt
     }
@@ -117,6 +119,24 @@ public class SpeedrunToolSettings : EverestModuleSettings {
     /// 用 srt_mapdata all 打开。
     /// </summary>
     public bool ShareLevelDataAll { get; set; } = false;
+    /// <summary>
+    /// 忙碌时（读档后的 wipe / 冻结窗口）按存档不报 Busy，而是排队，等空闲后自动补一次。
+    /// 高速图里"读完立刻存"很常见。
+    /// </summary>
+    public bool QueueSaveWhenBusy { get; set; } = true;
+
+    /// <summary>
+    /// 允许在"读档后的等待状态"（State.Waiting，画面冻结等按键）里直接存档，而不是排队。
+    /// </summary>
+    public bool SaveWhileWaiting { get; set; } = false;
+
+    /// <summary>
+    /// 轮换存档：每次存档自动切到环里的下一个槽（1..RotateSlotCount），
+    /// 旧快照留在上一个槽里，配合 NumPad9 的预览 UI 就相当于"存档历史"。
+    /// </summary>
+    public bool RotateSaveSlots { get; set; } = false;
+
+    public int RotateSlotCount { get; set; } = 2;
     public bool SaveTimeAndDeaths { get; set; } = false;
     public bool SaveExtendedVariants { get; set; } = true;
 
