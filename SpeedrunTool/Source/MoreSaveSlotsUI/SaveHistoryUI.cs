@@ -1,4 +1,4 @@
-using Celeste.Mod.SpeedrunTool.SaveLoad;
+﻿using Celeste.Mod.SpeedrunTool.SaveLoad;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -160,33 +160,52 @@ internal static class SaveHistoryUI {
 
         for (int i = 0; i < entries.Count; i++) {
             bool highlight = i == selection;
-            float x = startX + i * (slotWidth + gap);
-            Rectangle rect = new((int) x, (int) y, (int) slotWidth, (int) slotHeight);
+
+            // 景深：选中的放大 + 全亮 + 白框，其余缩小 + 压暗，营造"焦点"
+            float focusScale = highlight ? 1.08f : 0.9f;
+            float focusAlpha = highlight ? 1f : 0.55f;
+            float lift = highlight ? -8f : 0f;
+
+            float centerX = startX + i * (slotWidth + gap) + slotWidth / 2f;
+            float centerY = y + slotHeight / 2f + lift;
+            float w = slotWidth * focusScale;
+            float h = slotHeight * focusScale;
+            Rectangle rect = new((int) (centerX - w / 2f), (int) (centerY - h / 2f), (int) w, (int) h);
 
             SaveSlot entry = entries[i];
             bool saved = entry.StateManager is { IsSaved: true };
             Texture2D tex = entry.Preview?.Tex;
 
-            Draw.Rect(rect, (highlight ? Color.White * 0.25f : Color.Black * 0.6f) * alpha);
+            // 选中项的柔光底
+            if (highlight) {
+                Draw.Rect(new Rectangle(rect.X - 4, rect.Y - 4, rect.Width + 8, rect.Height + 8), Color.White * (0.18f * alpha));
+            }
+
+            Draw.Rect(rect, Color.Black * (0.6f * alpha));
 
             if (tex is not null && tex.Width > 0 && tex.Height > 0) {
-                float scale = Math.Min(slotWidth / tex.Width, slotHeight / tex.Height);
+                float scale = Math.Min(w / tex.Width, h / tex.Height);
                 Vector2 size = new(tex.Width * scale, tex.Height * scale);
-                Vector2 pos = new(rect.X + (slotWidth - size.X) / 2f, rect.Y + (slotHeight - size.Y) / 2f);
-                Draw.SpriteBatch.Draw(tex, pos, null, Color.White * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Vector2 pos = new(rect.X + (w - size.X) / 2f, rect.Y + (h - size.Y) / 2f);
+                Draw.SpriteBatch.Draw(tex, pos, null, Color.White * (alpha * focusAlpha), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+
+                if (!highlight) {
+                    // 非选中：压暗做景深
+                    Draw.Rect(rect, Color.Black * (0.45f * alpha));
+                }
             }
             else {
                 string placeholder = saved ? "(no preview)" : "(empty)";
-                ActiveFont.DrawOutline(placeholder, new Vector2(rect.X + slotWidth / 2f, rect.Y + slotHeight / 2f),
+                ActiveFont.DrawOutline(placeholder, new Vector2(rect.X + w / 2f, rect.Y + h / 2f),
                     new Vector2(0.5f, 0.5f), Vector2.One * 0.45f, Color.Gray * alpha, 2f, Color.Black * alpha);
             }
 
-            Draw.HollowRect(rect, (highlight ? Color.White : Color.Gray * 0.8f) * alpha);
+            Draw.HollowRect(rect, (highlight ? Color.White : Color.Gray * 0.6f) * (alpha * focusAlpha));
 
             string label = saved ? SaveHistory.Label(i) : "(empty)";
-            ActiveFont.DrawOutline(label, new Vector2(rect.X + slotWidth / 2f, rect.Bottom + 6f),
-                new Vector2(0.5f, 0f), Vector2.One * 0.42f,
-                (highlight ? Color.White : Color.LightGray) * alpha, 2f, Color.Black * alpha);
+            ActiveFont.DrawOutline(label, new Vector2(centerX, rect.Bottom + 6f),
+                new Vector2(0.5f, 0f), Vector2.One * (highlight ? 0.46f : 0.38f),
+                (highlight ? Color.White : Color.LightGray) * (alpha * focusAlpha), 2f, Color.Black * alpha);
         }
 
         ActiveFont.DrawOutline("NumPad8 close   < > select   Confirm load",

@@ -80,9 +80,6 @@ internal static class SaveSlotsManager {
     // 配合已有的预览 UI（NumPad9，左右翻页、回车读档）就等于一个"存档历史"。
     private static int rotateIndex = 1;
 
-    private static bool IsUiOpen() {
-        return MoreSaveSlotsUI.SaveHistoryUI.OnScreen || MoreSaveSlotsUI.SnapshotUI.OnScreen;
-    }
     private static bool IsIdle() {
         foreach (SaveSlot slot in SaveSlots) {
             if (slot.StateManager.State != State.None) {
@@ -92,7 +89,6 @@ internal static class SaveSlotsManager {
 
         return true;
     }
-
     private static void AdvanceRotateSlot() {
         if (!ModSettings.RotateSaveSlots) {
             return;
@@ -107,7 +103,6 @@ internal static class SaveSlotsManager {
         if (!PendingSave || Engine.Scene is not Level || !IsIdle()) {
             return;
         }
-
         PendingSave = false;
         if (SaveState(out string popup)) {
             Message.PopupMessageUtils.Show(popup, null);
@@ -123,10 +118,6 @@ internal static class SaveSlotsManager {
     public static bool SaveState(out string popup) {
         bool b;
 
-        if (IsUiOpen()) {
-            popup = "Cannot Save: SpeedrunTool UI is open!";
-            return false;
-        }
 
         if (CannotSaveLoad()) {
             // 读档后的 wipe / 冻结窗口里按存档不再直接报 Busy：
@@ -169,10 +160,6 @@ internal static class SaveSlotsManager {
     public static bool LoadState(out string popup) {
         bool b;
 
-        if (IsUiOpen()) {
-            popup = "Cannot Load: SpeedrunTool UI is open!";
-            return false;
-        }
 
         if (CannotSaveLoad()) {
             b = false;

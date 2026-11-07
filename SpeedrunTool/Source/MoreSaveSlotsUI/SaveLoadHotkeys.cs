@@ -1,4 +1,4 @@
-using Celeste.Mod.SpeedrunTool.Message;
+﻿using Celeste.Mod.SpeedrunTool.Message;
 using Celeste.Mod.SpeedrunTool.Other;
 using Celeste.Mod.SpeedrunTool.SaveLoad;
 
@@ -41,7 +41,7 @@ internal static class SaveLoadHotkeys {
     [Load]
     private static void RegisterHotkeys() {
         Hotkey.SaveState.RegisterPressedAction(scene => {
-            if (scene is Level { Paused: false }) {
+            if (scene is Level { Paused: false } && !SaveHistoryUI.OnScreen && !SnapshotUI.OnScreen) {
 #if DEBUG
                 if (JetBrains_Profiling) {
                     JetBrains.Profiler.Api.MeasureProfiler.StartCollectingData();
@@ -57,7 +57,7 @@ internal static class SaveLoadHotkeys {
             }
         });
         Hotkey.LoadState.RegisterPressedAction(scene => {
-            if (scene is Level { Paused: false }) {
+            if (scene is Level { Paused: false } && !SaveHistoryUI.OnScreen && !SnapshotUI.OnScreen) {
 #if DEBUG
                 if (JetBrains_Profiling) {
                     JetBrains.Profiler.Api.MeasureProfiler.StartCollectingData();
