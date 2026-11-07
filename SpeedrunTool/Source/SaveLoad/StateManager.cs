@@ -1,4 +1,4 @@
-﻿using Celeste.Mod.SpeedrunTool.ModInterop;
+using Celeste.Mod.SpeedrunTool.ModInterop;
 using Celeste.Mod.SpeedrunTool.Utils;
 using Force.DeepCloner;
 using Force.DeepCloner.Helpers;
@@ -41,9 +41,25 @@ public sealed class StateManager {
     public string SlotDescription = "";
     public string FullSlotDescription => string.IsNullOrWhiteSpace(SlotDescription) ? $"[{SlotName}]" : $"[{SlotName}],  {SlotDescription}";
     private static string GenerateSlotDescription() {
-        string levelInfo = Engine.Scene.GetSession() is { } session ? $"'{session.Area.SID} [{session.Level}]'" : "";
+        string levelInfo = Engine.Scene.GetSession() is { } session ? $"'{GetLocalizedAreaName(session.Area)} [{session.Level}]'" : "";
         string frames = Engine.Scene is not null ? "(frame: " + (int)Math.Round(Engine.Scene.RawTimeActive / 0.0166667) + ")" : "";
         return levelInfo + frames;
+    }
+
+    /// <summary>章节显示名：优先用本地化的 AreaData.Name，拿不到再退回 SID。</summary>
+    private static string GetLocalizedAreaName(AreaKey area) {
+        try {
+            AreaData data = AreaData.Get(area);
+            if (data?.Name is not { Length: > 0 } name) {
+                return area.SID;
+            }
+
+            string localized = Dialog.Clean(name);
+            return string.IsNullOrWhiteSpace(localized) || localized == name ? area.SID : localized;
+        }
+        catch {
+            return area.SID;
+        }
     }
     private enum FreezeType {
         None,

@@ -40,6 +40,16 @@ internal static class SaveHistoryUI {
 
         if (!open) {
             if (self.Paused == false && MInput.Keyboard.Pressed(Keys.NumPad8) && SaveHistory.Count > 0) {
+            if (SaveLoadProfiler.Enabled) {
+                for (int i = 0; i < SaveHistory.Entries.Count; i++) {
+                    SaveSlot e = SaveHistory.Entries[i];
+                    bool inDict = Snapshot.SnapshotsDict.TryGetValue(e.Name, out Snapshot s);
+                    Logger.Info("SpeedrunTool/History",
+                        $"  [{i}] {e.Name} saved={e.StateManager?.IsSaved} inDict={inDict} tex={s?.Tex is not null} label={SaveHistory.Label(i)}");
+                }
+
+                Logger.Info("SpeedrunTool/History", $"  dict keys: {string.Join(", ", Snapshot.SnapshotsDict.Keys)}");
+            }
                 open = true;
                 selection = 0;
                 Audio.Play(OpenSfx);
