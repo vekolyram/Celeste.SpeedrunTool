@@ -1,4 +1,4 @@
-﻿using Celeste.Mod.SpeedrunTool.SaveLoad;
+using Celeste.Mod.SpeedrunTool.SaveLoad;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ namespace Celeste.Mod.SpeedrunTool.MoreSaveSlotsUI;
 
 /// <summary>
 /// 存档历史的时间轴 UI：屏幕下方一条横向缩略图，左右切换，回车读档。
-/// <para>按 <c>NumPad8</c> 打开/关闭。每条下面显示"房间 + 帧号"，所以能区分先后。</para>
+/// <para>按 <c>NumPad8</c> 打开/关闭；打开时通过 <see cref="GameFreezeManager.UI_IsOpen"/> 冻结游戏。</para>
 /// </summary>
 internal static class SaveHistoryUI {
     private static bool open;
@@ -19,6 +19,8 @@ internal static class SaveHistoryUI {
     private const string MoveSfx = "event:/ui/main/rollover_up";
     private const string ConfirmSfx = "event:/ui/main/button_select";
     private const string FailSfx = "event:/ui/game/lookout_off";
+
+    internal static bool OnScreen => open || ease > 0.01f;
 
     [Load]
     private static void Load() {
@@ -32,29 +34,11 @@ internal static class SaveHistoryUI {
         On.Celeste.Level.Render -= LevelOnRender;
     }
 
-    private static void LevelOnUpdate(On.Celeste.Level.orig_Update orig, Level self) {
-        orig(self);
-
-        float target = open ? 1f : 0f;
-        ease = Calc.Approach(ease, target, Engine.RawDeltaTime * 4f);
+    /// <summary>UI 打开期间游戏是冻结的（Level.Update 不跑），所以由 UI_IsOpen 每帧调用这里。</summary>
+    internal static void Update() {
+        TickEase();
 
         if (!open) {
-            if (self.Paused == false && MInput.Keyboard.Pressed(Keys.NumPad8) && SaveHistory.Count > 0) {
-            if (SaveLoadProfiler.Enabled) {
-                for (int i = 0; i < SaveHistory.Entries.Count; i++) {
-                    SaveSlot e = SaveHistory.Entries[i];
-                    bool inDict = Snapshot.SnapshotsDict.TryGetValue(e.Name, out Snapshot s);
-                    Logger.Info("SpeedrunTool/History",
-                        $"  [{i}] {e.Name} saved={e.StateManager?.IsSaved} inDict={inDict} tex={s?.Tex is not null} label={SaveHistory.Label(i)}");
-                }
-
-                Logger.Info("SpeedrunTool/History", $"  dict keys: {string.Join(", ", Snapshot.SnapshotsDict.Keys)}");
-            }
-                open = true;
-                selection = 0;
-                Audio.Play(OpenSfx);
-            }
-
             return;
         }
 
@@ -83,6 +67,35 @@ internal static class SaveHistoryUI {
         }
     }
 
+    private static void TickEase() {
+        float target = open ? 1f : 0f;
+        ease = Calc.Approach(ease, target, Engine.RawDeltaTime * 4f);
+    }
+
+    private static void LevelOnUpdate(On.Celeste.Level.orig_Update orig, Level self) {
+        orig(self);
+
+        TickEase();
+
+        if (open) {
+            return; // 打开时游戏被冻结，输入由 Update() 处理
+        }
+
+        if (self.Paused == false && MInput.Keyboard.Pressed(Keys.NumPad8) && SaveHistory.Count > 0) {
+            open = true;
+            selection = 0;
+            Audio.Play(OpenSfx);
+
+            if (SaveLoadProfiler.Enabled) {
+                for (int i = 0; i < SaveHistory.Entries.Count; i++) {
+                    SaveSlot entry = SaveHistory.Entries[i];
+                    Logger.Info("SpeedrunTool/History",
+                        $"  [{i}] {entry.Name} saved={entry.StateManager?.IsSaved} preview={entry.Preview is not null} tex={entry.Preview?.Tex is not null} label={SaveHistory.Label(i)}");
+                }
+            }
+        }
+    }
+
     private static void Close() {
         if (open) {
             Audio.Play(CloseSfx);
@@ -103,7 +116,7 @@ internal static class SaveHistoryUI {
             return;
         }
 
-        // 切到那条历史槽再读档：之后它就变成"当前槽"，再存档会把新的状态推回历史
+        // 切到那条历史槽再读档：之后它就是"当前槽"，再存档会把新状态推回历史
         if (!SaveSlotsManager.SwitchSlot(entry.Name)) {
             Audio.Play(FailSfx);
             return;
@@ -126,9 +139,9 @@ internal static class SaveHistoryUI {
 
         Draw.SpriteBatch.Begin();
 
-        Draw.Rect(new Rectangle(0, 0, Engine.Width, Engine.Height), Color.Black * (0.55f * alpha));
+        Draw.Rect(new Rectangle(0, 0, Engine.Width, Engine.Height), Color.Black * (0.6f * alpha));
 
-        ActiveFont.DrawOutline("SAVE HISTORY", new Vector2(Engine.Width / 2f, Engine.Height * 0.12f),
+        ActiveFont.DrawOutline("SAVE HISTORY", new Vector2(Engine.Width / 2f, Engine.Height * 0.14f),
             new Vector2(0.5f, 0.5f), Vector2.One * 0.9f, Color.White * alpha, 2f, Color.Black * alpha);
 
         if (entries.Count == 0) {
@@ -140,39 +153,44 @@ internal static class SaveHistoryUI {
 
         float totalWidth = Engine.Width * 0.86f;
         float gap = 12f;
-        float slotWidth = Math.Min(260f, (totalWidth - gap * (entries.Count - 1)) / entries.Count);
+        float slotWidth = Math.Min(280f, (totalWidth - gap * (entries.Count - 1)) / entries.Count);
         float slotHeight = slotWidth * 9f / 16f;
         float startX = (Engine.Width - (slotWidth * entries.Count + gap * (entries.Count - 1))) / 2f;
-        float y = Engine.Height * 0.55f - slotHeight / 2f;
+        float y = Engine.Height * 0.52f - slotHeight / 2f;
 
         for (int i = 0; i < entries.Count; i++) {
             bool highlight = i == selection;
             float x = startX + i * (slotWidth + gap);
             Rectangle rect = new((int) x, (int) y, (int) slotWidth, (int) slotHeight);
 
-            bool saved = entries[i].StateManager is { IsSaved: true };
+            SaveSlot entry = entries[i];
+            bool saved = entry.StateManager is { IsSaved: true };
+            Texture2D tex = entry.Preview?.Tex;
 
-            // 背景
-            Draw.Rect(rect, (highlight ? Color.White * 0.22f : Color.Black * 0.55f) * alpha);
+            Draw.Rect(rect, (highlight ? Color.White * 0.25f : Color.Black * 0.6f) * alpha);
 
-            // 缩略图
-            if (saved && Snapshot.SnapshotsDict.TryGetValue(entries[i].Name, out Snapshot snap) && snap.Tex is { } tex) {
+            if (tex is not null && tex.Width > 0 && tex.Height > 0) {
                 float scale = Math.Min(slotWidth / tex.Width, slotHeight / tex.Height);
                 Vector2 size = new(tex.Width * scale, tex.Height * scale);
                 Vector2 pos = new(rect.X + (slotWidth - size.X) / 2f, rect.Y + (slotHeight - size.Y) / 2f);
                 Draw.SpriteBatch.Draw(tex, pos, null, Color.White * alpha, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
+            else {
+                string placeholder = saved ? "(no preview)" : "(empty)";
+                ActiveFont.DrawOutline(placeholder, new Vector2(rect.X + slotWidth / 2f, rect.Y + slotHeight / 2f),
+                    new Vector2(0.5f, 0.5f), Vector2.One * 0.45f, Color.Gray * alpha, 2f, Color.Black * alpha);
+            }
 
             Draw.HollowRect(rect, (highlight ? Color.White : Color.Gray * 0.8f) * alpha);
 
-            // 标签：房间 + 帧号
             string label = saved ? SaveHistory.Label(i) : "(empty)";
             ActiveFont.DrawOutline(label, new Vector2(rect.X + slotWidth / 2f, rect.Bottom + 6f),
                 new Vector2(0.5f, 0f), Vector2.One * 0.42f,
                 (highlight ? Color.White : Color.LightGray) * alpha, 2f, Color.Black * alpha);
         }
 
-        ActiveFont.DrawOutline("NumPad8 close   < > select   Confirm load", new Vector2(Engine.Width / 2f, Engine.Height * 0.86f),
+        ActiveFont.DrawOutline("NumPad8 close   < > select   Confirm load",
+            new Vector2(Engine.Width / 2f, Engine.Height * 0.84f),
             new Vector2(0.5f, 0.5f), Vector2.One * 0.45f, Color.Gray * alpha, 2f, Color.Black * alpha);
 
         Draw.SpriteBatch.End();

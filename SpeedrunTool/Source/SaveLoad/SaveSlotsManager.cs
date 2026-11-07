@@ -294,6 +294,9 @@ public class SaveSlot {
 
     public StateManager StateManager;
 
+    // 历史条目的缩略图（不放在 Snapshot.SnapshotsDict 里，避免被 RemoveSnapshot Dispose）
+    internal MoreSaveSlotsUI.Snapshot Preview;
+
     public bool ValueDictionaryInitialized = false;
 
     public Dictionary<int, Dictionary<Type, Dictionary<string, object>>> AllSavedValues = [];

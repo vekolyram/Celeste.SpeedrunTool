@@ -51,12 +51,25 @@ internal static class SaveHistory {
             return;
         }
 
-        // 整体下移一位，最旧的落到 current 上（随后会被 ClearStateImpl 清掉）
+        // 先把"当前槽"的缩略图从字典里摘下来（不 Dispose），随后挂到最新那条历史上。
+        // 这样既不会和下一次存档新抓的图打架，也不会被 RemoveSnapshot 顺手释放掉。
+        string sourceName = current.StateManager.SlotName;
+        Snapshot taken = null;
+        if (Snapshot.SnapshotsDict.TryGetValue(sourceName, out Snapshot s)) {
+            Snapshot.SnapshotsDict.Remove(sourceName);
+            taken = s;
+        }
+
+        // 整体下移一位，最旧的落到 current 上（它的预览随后被释放）
         for (int i = entries.Count - 1; i > 0; i--) {
             Swap(entries[i], entries[i - 1]);
         }
 
         Swap(entries[0], current);
+
+        current.Preview?.Tex?.Dispose();
+        current.Preview = null;
+        entries[0].Preview = taken;
     }
 
     private static void Swap(SaveSlot a, SaveSlot b) {
@@ -66,29 +79,15 @@ internal static class SaveHistory {
         (a.ClonedEventInstancesWhenSave, b.ClonedEventInstancesWhenSave) = (b.ClonedEventInstancesWhenSave, a.ClonedEventInstancesWhenSave);
         (a.ClonedEventInstancesWhenPreClone, b.ClonedEventInstancesWhenPreClone) =
             (b.ClonedEventInstancesWhenPreClone, a.ClonedEventInstancesWhenPreClone);
+        (a.Preview, b.Preview) = (b.Preview, a.Preview);
 
-        // StateManager 里的 SlotName 决定弹窗文案和预览图归属，跟着内容一起改
+        // StateManager 里的 SlotName 决定弹窗文案，跟着内容一起改
         if (a.StateManager is { } sa) {
-            MovePreview(sa.SlotName, a.Name);
             sa.SlotName = a.Name;
         }
 
         if (b.StateManager is { } sb) {
-            MovePreview(sb.SlotName, b.Name);
             sb.SlotName = b.Name;
-        }
-    }
-
-    private static void MovePreview(string from, string to) {
-        if (from == to || string.IsNullOrEmpty(from)) {
-            return;
-        }
-
-        Dictionary<string, Snapshot> dict = Snapshot.SnapshotsDict;
-        if (dict.TryGetValue(from, out Snapshot snap)) {
-            dict.Remove(from);
-            snap.Name = to;
-            dict[to] = snap;
         }
     }
 

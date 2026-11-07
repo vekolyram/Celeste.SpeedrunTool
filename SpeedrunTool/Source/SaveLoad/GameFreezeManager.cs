@@ -1,4 +1,4 @@
-using Celeste.Mod.SpeedrunTool.Message;
+﻿using Celeste.Mod.SpeedrunTool.Message;
 using Celeste.Mod.SpeedrunTool.ModInterop;
 using Celeste.Mod.SpeedrunTool.MoreSaveSlotsUI;
 using Celeste.Mod.SpeedrunTool.Other;
@@ -134,9 +134,12 @@ internal static class GameFreezeManager {
             SnapshotUI.Close();
             return false;
         }
-        if (!SnapshotUI.OnScreen) {
+        if (!SnapshotUI.OnScreen && !MoreSaveSlotsUI.SaveHistoryUI.OnScreen) {
             return false;
         }
+
+        MoreSaveSlotsUI.SaveHistoryUI.Update();
+
         SnapshotUI.Update();
         UpdateMessageWhenWaiting(level);
 
