@@ -7,7 +7,7 @@ namespace Celeste.Mod.SpeedrunTool.MoreSaveSlotsUI;
 
 /// <summary>
 /// 存档历史的时间轴 UI：屏幕下方一条横向缩略图，左右切换，回车读档。
-/// <para>按 <c>F6</c> 打开/关闭。每条下面显示"房间 + 帧号"，所以能区分先后。</para>
+/// <para>按 <c>NumPad8</c> 打开/关闭。每条下面显示"房间 + 帧号"，所以能区分先后。</para>
 /// </summary>
 internal static class SaveHistoryUI {
     private static bool open;
@@ -39,7 +39,7 @@ internal static class SaveHistoryUI {
         ease = Calc.Approach(ease, target, Engine.RawDeltaTime * 4f);
 
         if (!open) {
-            if (self.Paused == false && MInput.Keyboard.Pressed(Keys.F6) && SaveHistory.Count > 0) {
+            if (self.Paused == false && MInput.Keyboard.Pressed(Keys.NumPad8) && SaveHistory.Count > 0) {
                 open = true;
                 selection = 0;
                 Audio.Play(OpenSfx);
@@ -48,7 +48,7 @@ internal static class SaveHistoryUI {
             return;
         }
 
-        if (Input.MenuCancel.Pressed || Input.ESC.Pressed || MInput.Keyboard.Pressed(Keys.F6)) {
+        if (Input.MenuCancel.Pressed || Input.ESC.Pressed || MInput.Keyboard.Pressed(Keys.NumPad8)) {
             Close();
             return;
         }
@@ -162,7 +162,7 @@ internal static class SaveHistoryUI {
                 (highlight ? Color.White : Color.LightGray) * alpha, 2f, Color.Black * alpha);
         }
 
-        ActiveFont.DrawOutline("F6 close   < > select   Confirm load", new Vector2(Engine.Width / 2f, Engine.Height * 0.86f),
+        ActiveFont.DrawOutline("NumPad8 close   < > select   Confirm load", new Vector2(Engine.Width / 2f, Engine.Height * 0.86f),
             new Vector2(0.5f, 0.5f), Vector2.One * 0.45f, Color.Gray * alpha, 2f, Color.Black * alpha);
 
         Draw.SpriteBatch.End();
