@@ -80,6 +80,8 @@ internal static class SaveSlotsManager {
     // 配合已有的预览 UI（NumPad9，左右翻页、回车读档）就等于一个"存档历史"。
     private static int rotateIndex = 1;
 
+    internal static bool IsHistorySlotName(string name) => name is not null && name.StartsWith("@history/");
+
     private static bool IsIdle() {
         foreach (SaveSlot slot in SaveSlots) {
             if (slot.StateManager.State != State.None) {
@@ -100,7 +102,7 @@ internal static class SaveSlotsManager {
     }
 
     internal static void TryFlushPendingSave() {
-        if (!PendingSave || Engine.Scene is not Level || !IsIdle()) {
+        if (!PendingSave || Engine.Scene is not Level || !IsAllFree()) {
             return;
         }
         PendingSave = false;
@@ -134,6 +136,11 @@ internal static class SaveSlotsManager {
         }
         else {
             AdvanceRotateSlot();
+
+            // 当前槽若是历史槽（读档后遗留），先切回默认槽，避免把历史覆盖掉
+            if (IsHistorySlotName(Slot.Name)) {
+                SwitchSlot(GetSlotName(1));
+            }
 
             // 事务式历史：先把旧内容换到临时槽，存档成功才提交进历史环
             SaveSlot? historyHolder = MoreSaveSlotsUI.SaveHistory.Enabled ? MoreSaveSlotsUI.SaveHistory.Begin(Slot) : null;
