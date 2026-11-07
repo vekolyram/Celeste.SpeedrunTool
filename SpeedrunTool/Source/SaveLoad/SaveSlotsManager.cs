@@ -137,23 +137,15 @@ internal static class SaveSlotsManager {
         else {
             AdvanceRotateSlot();
 
-            // 当前槽若是历史槽（读档后遗留），先切回默认槽，避免把历史覆盖掉
-            if (IsHistorySlotName(Slot.Name)) {
-                SwitchSlot(GetSlotName(1));
-            }
-
-            // 事务式历史：先把旧内容换到临时槽，存档成功才提交进历史环
-            SaveSlot? historyHolder = MoreSaveSlotsUI.SaveHistory.Enabled ? MoreSaveSlotsUI.SaveHistory.Begin(Slot) : null;
+            // 历史：把当前槽的快照抽出来（只搬引用），存档成功后再压入环
+            MoreSaveSlotsUI.SaveHistory.Entry historyEntry = MoreSaveSlotsUI.SaveHistory.Capture(Slot);
 
             b = StateManagerInstance.SaveStateImpl(false, out string message);
             popup = message;
 
             if (b) {
-                MoreSaveSlotsUI.SaveHistory.Commit(historyHolder);
+                MoreSaveSlotsUI.SaveHistory.Push(historyEntry);
                 MoreSaveSlotsUI.Snapshot.RequireCaptureSnapshot(SlotName);
-            }
-            else {
-                MoreSaveSlotsUI.SaveHistory.Rollback(historyHolder);
             }
         }
         if (!b) {

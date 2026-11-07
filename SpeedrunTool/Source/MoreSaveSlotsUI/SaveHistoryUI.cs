@@ -47,7 +47,7 @@ internal static class SaveHistoryUI {
             return;
         }
 
-        IReadOnlyList<SaveSlot> entries = SaveHistory.Entries;
+        IReadOnlyList<SaveHistory.Entry> entries = SaveHistory.Entries;
         if (entries.Count == 0) {
             Close();
             return;
@@ -86,13 +86,6 @@ internal static class SaveHistoryUI {
             selection = 0;
             Audio.Play(OpenSfx);
 
-            if (SaveLoadProfiler.Enabled) {
-                for (int i = 0; i < SaveHistory.Entries.Count; i++) {
-                    SaveSlot entry = SaveHistory.Entries[i];
-                    Logger.Info("SpeedrunTool/History",
-                        $"  [{i}] {entry.Name} saved={entry.StateManager?.IsSaved} preview={entry.Preview is not null} tex={entry.Preview?.Tex is not null} label={SaveHistory.Label(i)}");
-                }
-            }
         }
     }
 
@@ -105,26 +98,14 @@ internal static class SaveHistoryUI {
     }
 
     private static void LoadEntry(int index) {
-        IReadOnlyList<SaveSlot> entries = SaveHistory.Entries;
+        IReadOnlyList<SaveHistory.Entry> entries = SaveHistory.Entries;
         if (index < 0 || index >= entries.Count) {
-            return;
-        }
-
-        SaveSlot entry = entries[index];
-        if (entry.StateManager is not { IsSaved: true }) {
-            Audio.Play(FailSfx);
-            return;
-        }
-
-        // 切到那条历史槽再读档：之后它就是"当前槽"，再存档会把新状态推回历史
-        if (!SaveSlotsManager.SwitchSlot(entry.Name)) {
-            Audio.Play(FailSfx);
             return;
         }
 
         Audio.Play(ConfirmSfx);
         open = false;
-        SaveLoadHotkeys.LoadStateAndMessage();
+        SaveHistory.Load(entries[index]);
     }
 
     private static void LevelOnRender(On.Celeste.Level.orig_Render orig, Level self) {
@@ -134,7 +115,7 @@ internal static class SaveHistoryUI {
             return;
         }
 
-        IReadOnlyList<SaveSlot> entries = SaveHistory.Entries;
+        IReadOnlyList<SaveHistory.Entry> entries = SaveHistory.Entries;
         float alpha = Calc.Clamp(ease, 0f, 1f);
 
         Draw.SpriteBatch.Begin();
@@ -172,8 +153,8 @@ internal static class SaveHistoryUI {
             float h = slotHeight * focusScale;
             Rectangle rect = new((int) (centerX - w / 2f), (int) (centerY - h / 2f), (int) w, (int) h);
 
-            SaveSlot entry = entries[i];
-            bool saved = entry.StateManager is { IsSaved: true };
+            SaveHistory.Entry entry = entries[i];
+            bool saved = entry.Level is not null;
             Texture2D tex = entry.Preview?.Tex;
 
             // 选中项的柔光底

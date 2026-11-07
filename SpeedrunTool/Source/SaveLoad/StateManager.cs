@@ -1,4 +1,4 @@
-using Celeste.Mod.SpeedrunTool.ModInterop;
+﻿using Celeste.Mod.SpeedrunTool.ModInterop;
 using Celeste.Mod.SpeedrunTool.Utils;
 using Force.DeepCloner;
 using Force.DeepCloner.Helpers;
@@ -28,14 +28,14 @@ public sealed class StateManager {
     public bool LoadByTas { get; private set; }
     public bool ClearBeforeSave { get; private set; }
     public Level SavedLevel => savedLevel;
-    private Level savedLevel;
-    private SaveData savedSaveData;
+    internal Level savedLevel;
+    internal SaveData savedSaveData;
     internal Task<DeepCloneState> preCloneTask;
     private FreezeType freezeType;
     private Process celesteProcess;
     private int savedTasCycleGroupCounter;
     private WeakReference<IEnumerator> transitionRoutine;
-    private IEnumerator savedTransitionRoutine;
+    internal IEnumerator savedTransitionRoutine;
 
     public string SlotName;
     public string SlotDescription = "";
