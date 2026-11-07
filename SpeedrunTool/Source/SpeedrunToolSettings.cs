@@ -1,4 +1,4 @@
-using Celeste.Mod.SpeedrunTool.Message;
+﻿using Celeste.Mod.SpeedrunTool.Message;
 using Celeste.Mod.SpeedrunTool.Other;
 using Celeste.Mod.SpeedrunTool.RoomTimer;
 using Celeste.Mod.SpeedrunTool.SaveLoad;
@@ -120,6 +120,11 @@ public class SpeedrunToolSettings : EverestModuleSettings {
     /// 用 srt_mapdata all 打开。
     /// </summary>
     public bool ShareLevelDataAll { get; set; } = false;
+    /// <summary>
+    /// 存档历史条数（0 = 关闭，最多 5）。每次存档前把即将被覆盖的快照挪进历史环，
+    /// 按 F6 打开时间轴 UI 翻看并读回。内存代价 = 条数 × 单份快照。
+    /// </summary>
+    public int SaveHistoryCount { get; set; } = 0;
     /// <summary>
     /// 读档后"冻结 + 读秒恢复"，单位 0.5 秒，0 = 关闭。
     /// 动画仿 Phigros 的暂停恢复（画面压暗 + 白色圆收缩 + 剩余秒数）。

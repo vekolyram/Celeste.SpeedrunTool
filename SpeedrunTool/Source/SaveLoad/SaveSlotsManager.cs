@@ -134,6 +134,7 @@ internal static class SaveSlotsManager {
         }
         else {
             AdvanceRotateSlot();
+            MoreSaveSlotsUI.SaveHistory.Push(Slot); // 先把即将被覆盖的快照挪进历史
             b = StateManagerInstance.SaveStateImpl(false, out string message);
             popup = message;
             if (b) {
@@ -297,8 +298,8 @@ public class SaveSlot {
 
     public Dictionary<int, Dictionary<Type, Dictionary<string, object>>> AllSavedValues = [];
 
-    public readonly List<EventInstance> ClonedEventInstancesWhenSave = [];
-    public readonly List<EventInstance> ClonedEventInstancesWhenPreClone = [];
+    public List<EventInstance> ClonedEventInstancesWhenSave = [];
+    public List<EventInstance> ClonedEventInstancesWhenPreClone = [];
 
     public SaveSlot(string name) {
         Name = name;

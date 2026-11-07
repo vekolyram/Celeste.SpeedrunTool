@@ -166,6 +166,8 @@ public static class DialogIds {
     public const string HotkeysConfig = "SPEEDRUN_TOOL_HOTKEYS_CONFIG";
     public const string UnlockCamera = "SPEEDRUN_TOOL_UNLOCK_CAMERA";
     public const string EmoteModPULP = "SPEEDRUN_TOOL_EMOTE_MOD_PULP";
+    public const string SaveHistoryCount = "SPEEDRUN_TOOL_SAVE_HISTORY_COUNT";
+    public const string SaveHistoryCountTip = "SPEEDRUN_TOOL_SAVE_HISTORY_COUNT_TIP";
     public const string ResumeCountdown = "SPEEDRUN_TOOL_RESUME_COUNTDOWN";
     public const string ResumeCountdownTip = "SPEEDRUN_TOOL_RESUME_COUNTDOWN_TIP";
     // Save behaviour

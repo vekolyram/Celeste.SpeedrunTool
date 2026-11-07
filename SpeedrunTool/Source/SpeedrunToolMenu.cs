@@ -188,6 +188,10 @@ public static class SpeedrunToolMenu {
             }));
             AddDescription(saveWhileWaiting, subMenu, menu, Dialog.Clean(DialogIds.SaveWhileWaitingTip));
 
+            TextMenu.Item saveHistory;
+            subMenu.Add(saveHistory = new TextMenuExt.IntSlider(Dialog.Clean(DialogIds.SaveHistoryCount), 0, 5, ModSettings.SaveHistoryCount)
+                .Change(i => ModSettings.SaveHistoryCount = i));
+            AddDescription(saveHistory, subMenu, menu, Dialog.Clean(DialogIds.SaveHistoryCountTip));
             TextMenu.Item rotateSlots;
             subMenu.Add(rotateSlots = new TextMenu.OnOff(Dialog.Clean(DialogIds.RotateSaveSlots), ModSettings.RotateSaveSlots).Change(b =>
                 ModSettings.RotateSaveSlots = b));

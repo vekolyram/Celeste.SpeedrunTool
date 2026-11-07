@@ -201,5 +201,8 @@ SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS=             Rotating Save Slots (Save history)
 SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS_TIP=         Each save moves to the next slot, so the previous state stays in the slot before it. Browse them with the save slot UI to recover an overwritten save
 SPEEDRUN_TOOL_ROTATE_SLOT_COUNT=             Rotating Slot Count
 SPEEDRUN_TOOL_RESUME_COUNTDOWN=                 Resume Countdown after Load
-SPEEDRUN_TOOL_RESUME_COUNTDOWN_TIP=             Freezes the game after loading and counts down (0.5s per step, 0 = off). The animation mimics the Phigros pause-resume ring
+SPEEDRUN_TOOL_RESUME_COUNTDOWN_TIP=             Freezes the game after loading and counts down (0.5s per step, 0 = off). The animation mimics the Phigros pause-resume ring
+SPEEDRUN_TOOL_SAVE_HISTORY_COUNT=               Save History (timeline)
+SPEEDRUN_TOOL_SAVE_HISTORY_COUNT_TIP=           Keep the last N overwritten states (0 = off, max 5). Press F6 in a level to open the timeline: left/right to browse, confirm to load
+
 

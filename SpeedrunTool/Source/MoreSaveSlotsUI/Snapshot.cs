@@ -1,4 +1,4 @@
-
+﻿
 using Celeste.Mod.SpeedrunTool.Message;
 using Celeste.Mod.SpeedrunTool.Other;
 using Celeste.Mod.SpeedrunTool.SaveLoad;
@@ -38,6 +38,8 @@ internal class Snapshot {
     public Snapshot(string name) { snapshotTex = null; Name = name; IsSaved = true; }
 
     private Texture2D snapshotTex;
+
+    internal Texture2D Tex => snapshotTex;
 
     internal string Name;
 

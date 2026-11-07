@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.SpeedrunTool.SaveLoad;
@@ -68,28 +68,14 @@ internal static class ResumeCountdown {
             return;
         }
 
-        float progress = 1f - remaining / total; // 0 → 1
-        float eased = Ease.CubeIn(progress);
-
+        // 返祖版：只读数字，不画圆、不压暗（要动画再说）
         Draw.SpriteBatch.Begin();
 
-        // 压暗整个画面
-        Draw.Rect(new Rectangle(0, 0, Engine.Width, Engine.Height), Color.Black * (0.5f * Math.Min(1f, progress * 4f)));
-
-        // 收缩的圆（Phigros 的暂停恢复就是这样一个收拢的白圈）
         Vector2 center = new(Engine.Width / 2f, Engine.Height / 2f);
-        float maxRadius = Math.Min(Engine.Width, Engine.Height) * 0.18f;
-        float radius = MathHelper.Lerp(maxRadius, 0f, eased);
-        if (radius > 1f) {
-            Draw.Circle(center, radius, Color.White * (0.9f * (1f - eased * 0.6f)), 64);
-        }
+        string text = Math.Ceiling(remaining).ToString("0");
 
-        // 剩余秒数
-        string text = remaining.ToString("0.0");
-        float scale = 1.6f * (1f - eased * 0.35f);
-        ActiveFont.DrawOutline(text, center, new Vector2(0.5f, 0.5f), Vector2.One * scale,
-            Color.White * (1f - eased), 2f, Color.Black * (1f - eased));
+        ActiveFont.DrawOutline(text, center, new Vector2(0.5f, 0.5f), Vector2.One * 3f,
+            Color.White, 3f, Color.Black * 0.8f);
 
         Draw.SpriteBatch.End();
-    }
-}
+    }}
