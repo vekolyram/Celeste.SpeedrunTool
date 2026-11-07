@@ -39,6 +39,7 @@ public class SpeedrunToolSettings : EverestModuleSettings {
         sb.Append($"\n - {nameof(ShareLevelData)}: {ShareLevelData}");
         sb.Append($"\n - {nameof(ShareLevelDataAll)}: {ShareLevelDataAll}");
         sb.Append($"\n - ProfileSaveLoad: {SaveLoadProfiler.Enabled}");
+        sb.Append($"\n - {nameof(ResumeCountdown)}: {ResumeCountdown}");
         sb.Append($"\n - {nameof(QueueSaveWhenBusy)}: {QueueSaveWhenBusy}, {nameof(SaveWhileWaiting)}: {SaveWhileWaiting}, {nameof(RotateSaveSlots)}: {RotateSaveSlots}({RotateSlotCount})");
         Logger.Info("SpeedrunTool", sb.ToString());
         // log it in LogLevel.Info, so we know more to diagnose when user gives us a log.txt
@@ -119,6 +120,11 @@ public class SpeedrunToolSettings : EverestModuleSettings {
     /// 用 srt_mapdata all 打开。
     /// </summary>
     public bool ShareLevelDataAll { get; set; } = false;
+    /// <summary>
+    /// 读档后"冻结 + 读秒恢复"，单位 0.5 秒，0 = 关闭。
+    /// 动画仿 Phigros 的暂停恢复（画面压暗 + 白色圆收缩 + 剩余秒数）。
+    /// </summary>
+    public int ResumeCountdown { get; set; } = 0;
     /// <summary>
     /// 忙碌时（读档后的 wipe / 冻结窗口）按存档不报 Busy，而是排队，等空闲后自动补一次。
     /// 高速图里"读完立刻存"很常见。

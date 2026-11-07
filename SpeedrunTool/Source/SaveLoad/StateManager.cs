@@ -354,6 +354,7 @@ public sealed class StateManager {
 
     internal bool ClearStateImpl(bool hasGc = true) {
         preCloneTask?.Wait();
+        ResumeCountdown.Cancel();
 
         // fix: 读档冻结时被TAS清除状态后无法解除冻结
         if (State == State.Waiting && Engine.Scene is Level level) {
@@ -695,6 +696,13 @@ public sealed class StateManager {
 
     private void DoScreenWipe(Level level) {
         level.DoScreenWipe(true, () => {
+            // 读档后的"读秒恢复"：冻结固定时长，倒计时归零时由 ResumeCountdown 调 OutOfFreeze
+            if (freezeType == FreezeType.Load && ModSettings.ResumeCountdown > 0) {
+                State = State.Waiting;
+                ResumeCountdown.Start(ResumeCountdown.Seconds);
+                return;
+            }
+
             if (ModSettings.FreezeAfterLoadStateType != FreezeAfterLoadStateType.Off) {
                 State = State.Waiting;
             }
@@ -705,6 +713,7 @@ public sealed class StateManager {
     }
 
     internal void OutOfFreeze(Level level) {
+        ResumeCountdown.Cancel();
         if (freezeType == FreezeType.Save || savedLevel == null) {
             if (savedLevel != null) {
                 RestoreLevelTime(level);

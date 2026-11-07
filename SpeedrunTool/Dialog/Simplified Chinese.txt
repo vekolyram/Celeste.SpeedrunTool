@@ -200,4 +200,7 @@ SPEEDRUN_TOOL_SAVE_WHILE_WAITING=            读档后冻结时也能存档
 SPEEDRUN_TOOL_SAVE_WHILE_WAITING_TIP=        允许在"读档后画面冻结等按键"的状态下直接存档
 SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS=             轮换存档槽（存档历史）
 SPEEDRUN_TOOL_ROTATE_SAVE_SLOTS_TIP=         每次存档自动切到下一个槽，旧快照留在上一个槽里；用存档槽预览界面左右翻看即可找回被覆盖的存档
-SPEEDRUN_TOOL_ROTATE_SLOT_COUNT=             轮换槽数量
+SPEEDRUN_TOOL_ROTATE_SLOT_COUNT=             轮换槽数量
+SPEEDRUN_TOOL_RESUME_COUNTDOWN=                 读档后读秒恢复
+SPEEDRUN_TOOL_RESUME_COUNTDOWN_TIP=             读档后冻结并读秒（每档 0.5 秒，0 = 关闭），动画仿 Phigros 的暂停恢复圆圈
+

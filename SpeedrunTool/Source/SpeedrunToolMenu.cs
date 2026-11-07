@@ -172,6 +172,10 @@ public static class SpeedrunToolMenu {
                 ModSettings.SaveInLuaCutscene = b));
             AddDescription(saveInLua, subMenu, menu, Dialog.Clean(DialogIds.SaveInLuaWarn));
 
+            TextMenu.Item resumeCountdown;
+            subMenu.Add(resumeCountdown = new TextMenuExt.IntSlider(Dialog.Clean(DialogIds.ResumeCountdown), 0, 6, ModSettings.ResumeCountdown)
+                .Change(i => ModSettings.ResumeCountdown = i));
+            AddDescription(resumeCountdown, subMenu, menu, Dialog.Clean(DialogIds.ResumeCountdownTip));
             TextMenu.Item queueSave;
             subMenu.Add(queueSave = new TextMenu.OnOff(Dialog.Clean(DialogIds.QueueSaveWhenBusy), ModSettings.QueueSaveWhenBusy).Change(b =>
                 ModSettings.QueueSaveWhenBusy = b));
