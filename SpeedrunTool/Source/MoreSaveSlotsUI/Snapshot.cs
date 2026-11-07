@@ -129,6 +129,11 @@ internal class Snapshot {
             Snapshot snapshot = new(slot);
             CaptureSnapshots(self, snapshot);
             SnapshotsDict[slot] = snapshot;
+
+            // 同时挂到槽上: 历史条目搬移时直接拿这个引用, 不会和字典里的旧图错配
+            if (SaveSlotsManager.Dictionary.TryGetValue(slot, out SaveSlot saveSlot)) {
+                saveSlot.Preview = snapshot;
+            }
         }
         else {
             ScheduledCaptureSnapshots = false;

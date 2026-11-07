@@ -45,35 +45,46 @@ internal static class SaveHistory {
     }
 
     /// <summary>把即将被覆盖的快照推进历史（在 SaveStateImpl 清掉它之前调用）。</summary>
-    internal static void Push(SaveSlot current) {
+    internal static bool Enabled => Count > 0;
+
+    private static readonly SaveSlot temp = new("@history/tmp");
+
+    /// <summary>
+    /// 存档前调用：把"即将被覆盖"的内容整体换到临时槽，当前槽变空（IsSaved=false）。
+    /// 这样 SaveStateImpl 不会再走 ClearStateImpl，历史环也不会被提前改动；
+    /// 存档失败时可以原样换回来。
+    /// </summary>
+    internal static SaveSlot? Begin(SaveSlot current) {
         Ensure();
         if (entries.Count == 0 || current.StateManager is not { IsSaved: true }) {
+            return null;
+        }
+
+        Swap(temp, current);
+        return temp;
+    }
+
+    /// <summary>存档成功后调用：旋转历史环，把临时槽里的旧内容放进 entries[0]。</summary>
+    internal static void Commit(SaveSlot? holder) {
+        if (holder is null || entries.Count == 0) {
             return;
         }
 
-        // 先把"当前槽"的缩略图从字典里摘下来（不 Dispose），随后挂到最新那条历史上。
-        // 这样既不会和下一次存档新抓的图打架，也不会被 RemoveSnapshot 顺手释放掉。
-        string sourceName = current.StateManager.SlotName;
-        Snapshot taken = null;
-        if (Snapshot.SnapshotsDict.TryGetValue(sourceName, out Snapshot s)) {
-            Snapshot.SnapshotsDict.Remove(sourceName);
-            taken = s;
-        }
-
-        // 整体下移一位，最旧的落到 current 上（它的预览随后被释放）
         for (int i = entries.Count - 1; i > 0; i--) {
             Swap(entries[i], entries[i - 1]);
         }
 
-        Swap(entries[0], current);
+        Swap(entries[0], holder);
 
-        current.Preview?.Tex?.Dispose();
-        current.Preview = null;
-        entries[0].Preview = taken;
+        // 被挤掉的那条现在在 holder 里，释放它的缩略图
+        holder.Preview?.Tex?.Dispose();
+        holder.Preview = null;
+    }
 
-        if (taken is null) {
-            // 兜底: 拿不到旧图时, 让下一帧给这条历史补抓一张(画面是当前状态, 但至少有图)
-            Snapshot.RequireCaptureSnapshot(entries[0].Name);
+    /// <summary>存档失败时调用：把内容换回当前槽。</summary>
+    internal static void Rollback(SaveSlot? holder) {
+        if (holder is not null) {
+            Swap(holder, SaveSlotsManager.Slot);
         }
     }
 

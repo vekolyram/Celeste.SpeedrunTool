@@ -143,11 +143,19 @@ internal static class SaveSlotsManager {
         }
         else {
             AdvanceRotateSlot();
-            MoreSaveSlotsUI.SaveHistory.Push(Slot); // 先把即将被覆盖的快照挪进历史
+
+            // 事务式历史：先把旧内容换到临时槽，存档成功才提交进历史环
+            SaveSlot? historyHolder = MoreSaveSlotsUI.SaveHistory.Enabled ? MoreSaveSlotsUI.SaveHistory.Begin(Slot) : null;
+
             b = StateManagerInstance.SaveStateImpl(false, out string message);
             popup = message;
+
             if (b) {
+                MoreSaveSlotsUI.SaveHistory.Commit(historyHolder);
                 MoreSaveSlotsUI.Snapshot.RequireCaptureSnapshot(SlotName);
+            }
+            else {
+                MoreSaveSlotsUI.SaveHistory.Rollback(historyHolder);
             }
         }
         if (!b) {
