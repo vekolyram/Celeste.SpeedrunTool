@@ -70,6 +70,11 @@ internal static class SaveHistory {
         current.Preview?.Tex?.Dispose();
         current.Preview = null;
         entries[0].Preview = taken;
+
+        if (taken is null) {
+            // 兜底: 拿不到旧图时, 让下一帧给这条历史补抓一张(画面是当前状态, 但至少有图)
+            Snapshot.RequireCaptureSnapshot(entries[0].Name);
+        }
     }
 
     private static void Swap(SaveSlot a, SaveSlot b) {

@@ -80,6 +80,9 @@ internal static class SaveSlotsManager {
     // 配合已有的预览 UI（NumPad9，左右翻页、回车读档）就等于一个"存档历史"。
     private static int rotateIndex = 1;
 
+    private static bool IsUiOpen() {
+        return MoreSaveSlotsUI.SaveHistoryUI.OnScreen || MoreSaveSlotsUI.SnapshotUI.OnScreen;
+    }
     private static bool IsIdle() {
         foreach (SaveSlot slot in SaveSlots) {
             if (slot.StateManager.State != State.None) {
@@ -119,6 +122,12 @@ internal static class SaveSlotsManager {
     #endregion
     public static bool SaveState(out string popup) {
         bool b;
+
+        if (IsUiOpen()) {
+            popup = "Cannot Save: SpeedrunTool UI is open!";
+            return false;
+        }
+
         if (CannotSaveLoad()) {
             // 读档后的 wipe / 冻结窗口里按存档不再直接报 Busy：
             // 排队等空闲后自动补一次（高速图里"读完立刻存"很常见）
@@ -151,6 +160,12 @@ internal static class SaveSlotsManager {
 
     public static bool LoadState(out string popup) {
         bool b;
+
+        if (IsUiOpen()) {
+            popup = "Cannot Load: SpeedrunTool UI is open!";
+            return false;
+        }
+
         if (CannotSaveLoad()) {
             b = false;
             popup = "Failed to Save: SpeedrunTool is Busy!";

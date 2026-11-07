@@ -10,12 +10,18 @@ namespace Celeste.Mod.SpeedrunTool.MoreSaveSlotsUI;
 internal class Snapshot {
 
     internal static void RequireCaptureSnapshot(string slot) {
-        if (!LegalNames.Contains(slot)) {
+        if (!LegalNames.Contains(slot) && !slot.StartsWith("@history/")) {
             return;
         }
-        DemandingSlot = slot;
+
+        if (!DemandQueue.Contains(slot)) {
+            DemandQueue.Enqueue(slot);
+        }
+
         ScheduledCaptureSnapshots = true;
     }
+
+    internal static readonly Queue<string> DemandQueue = new();
 
     internal static void RemoveSnapshot(string slot) {
         if (SnapshotsDict.TryGetValue(slot, out Snapshot snap)) {
@@ -23,6 +29,7 @@ internal class Snapshot {
             snap.snapshotTex?.Dispose();
             snap.snapshotTex = null;
         }
+        DemandQueue.Clear();
         ScheduledCaptureSnapshots = false; // avoid this field still somehow being true
     }
 
@@ -115,13 +122,18 @@ internal class Snapshot {
         LegalNames[0] = "DONT_USE_IT";
     }
     private static void CaptureSnapshotsBeforeRender(On.Celeste.Level.orig_BeforeRender orig, Level self) {
-        if (ScheduledCaptureSnapshots) {
-            ScheduledCaptureSnapshots = false;
-            // immediately set it so there won't be infinite loop
-            Snapshot snapshot = new(DemandingSlot);
+        // 一次只抓一张，避免同一帧重复渲染关卡
+        if (DemandQueue.Count > 0) {
+            string slot = DemandQueue.Dequeue();
+            ScheduledCaptureSnapshots = DemandQueue.Count > 0;
+            Snapshot snapshot = new(slot);
             CaptureSnapshots(self, snapshot);
-            SnapshotsDict[DemandingSlot] = snapshot;
+            SnapshotsDict[slot] = snapshot;
         }
+        else {
+            ScheduledCaptureSnapshots = false;
+        }
+
         orig(self);
     }
     internal void RenderContent(float x1, float y1, float x2, float y2, float alpha, bool highlight) {
